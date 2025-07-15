@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Contact - Your Name{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card hover-lift">
+            <div class="card-body p-5">
+                <h2 class="text-center mb-4 fw-bold">
+                    <i class="fas fa-envelope text-primary"></i> Get in Touch
+                </h2>
+                
+                <p class="text-center lead mb-5 text-secondary">
+                    Interested in collaborating or have questions about my projects?
+                </p>
+                
+                <div class="row g-4 mb-5">
+                    <div class="col-md-6 text-center">
+                        <i class="fas fa-envelope icon-large text-primary mb-3"></i>
+                        <h5 class="fw-semibold">Email</h5>
+                        <p class="text-secondary">your.email@example.com</p>
+                    </div>
+                    
+                    <div class="col-md-6 text-center">
+                        <i class="fab fa-github icon-large text-primary mb-3"></i>
+                        <h5 class="fw-semibold">GitHub</h5>
+                        <p class="text-secondary">github.com/yourusername</p>
+                    </div>
+                </div>
+                
+                <div class="row g-4 mb-5">
+                    <div class="col-md-6 text-center">
+                        <i class="fab fa-linkedin icon-large text-primary mb-3"></i>
+                        <h5 class="fw-semibold">LinkedIn</h5>
+                        <p class="text-secondary">linkedin.com/in/yourprofile</p>
+                    </div>
+                    
+                    <div class="col-md-6 text-center">
+                        <i class="fas fa-code icon-large text-primary mb-3"></i>
+                        <h5 class="fw-semibold">Portfolio</h5>
+                        <p class="text-secondary">Check out my quiz app!</p>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-5">
+                    <a href="https://quiz.yourdomain.com" class="btn btn-primary btn-lg me-3" target="_blank">
+                        <i class="fas fa-gamepad"></i> Try My Quiz App
+                    </a>
+                    <a href="mailto:your.email@example.com" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-paper-plane"></i> Send Email
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

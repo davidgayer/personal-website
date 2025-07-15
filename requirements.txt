@@ -1,0 +1,40 @@
+# requirements.txt
+Flask==3.0.0
+Werkzeug>=3.0.0
+python-dotenv==1.0.0
+
+# .env (create this file - don't commit to git)
+FLASK_SECRET_KEY=your-super-secret-key-here-change-this
+
+# Procfile (for Railway deployment)
+web: python app.py
+
+# .gitignore
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.DS_Store
+Thumbs.db
+
+# railway.json (optional - for Railway configuration)
+{
+  "version": 2,
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "python app.py",
+    "healthcheckPath": "/",
+    "healthcheckTimeout": 100,
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}
