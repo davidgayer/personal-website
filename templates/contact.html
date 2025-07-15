@@ -28,39 +28,197 @@
                 <div class="row g-4 mb-5">
                     <div class="col-md-6 text-center">
                         <h5 class="fw-semibold">Email</h5>
-                        <p class="text-secondary">davidgayer@gmail.com</p>
+                        <p class="text-secondary clickable-email" onclick="copyEmail()" style="cursor: pointer;">
+                            davidgayer@gmail.com
+                            <small class="d-block text-muted mt-1">Click to copy</small>
+                        </p>
                     </div>
                     
                     <div class="col-md-6 text-center">
-                        <h5 class="fw-semibold">GitHub</h5>
-                        <p class="text-secondary">github.com/davidgayer</p>
+                        <h5 class="fw-semibold">Location</h5>
+                        <p class="text-secondary">Prague, Czech Republic</p>
                     </div>
                 </div>
                 
                 <div class="row g-4 mb-5">
                     <div class="col-md-6 text-center">
-                        <h5 class="fw-semibold">LinkedIn</h5>
-                        <p class="text-secondary">linkedin.com/in/david-gayer-68a3211a5</p>
+                        <h5 class="fw-semibold">GitHub</h5>
+                        <a href="https://github.com/davidgayer" target="_blank" class="text-secondary text-decoration-none">
+                            github.com/davidgayer
+                        </a>
                     </div>
                     
                     <div class="col-md-6 text-center">
-                        <h5 class="fw-semibold">Portfolio</h5>
-                        <p class="text-secondary">Check out my quiz app!</p>
+                        <h5 class="fw-semibold">LinkedIn</h5>
+                        <a href="https://www.linkedin.com/in/david-gayer-68a3211a5/" target="_blank" class="text-secondary text-decoration-none">
+                            linkedin.com/david-gayer
+                        </a>
                     </div>
                 </div>
                 
                 <div class="text-center mt-5">
-                    <a href="https://quiz.yourdomain.com" class="btn btn-primary btn-lg me-3" target="_blank">
-                        Try My Quiz App
-                    </a>
-                    <a href="mailto:davidgayer@gmail.com" class="btn btn-outline-primary btn-lg">
+                    <button class="btn btn-outline-primary btn-lg" onclick="openContactForm()">
                         Send Email
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Contact Form Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:rgba(0,0,0,0.95); border: 2px solid var(--border-color);">
+            <div class="modal-header" style="border-bottom: 2px solid var(--border-color);">
+                <h5 class="modal-title pixel-text" id="contactModalLabel">Send Message</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="contactForm">
+                    <div class="mb-3">
+                        <label for="visitorEmail" class="form-label">Your Email *</label>
+                        <input type="email" class="form-control" id="visitorEmail" required 
+                               style="background:rgba(0,0,0,0.8); border: 1px solid var(--border-color); color: var(--text-primary);">
+                        <div class="invalid-feedback" id="emailError"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message *</label>
+                        <textarea class="form-control" id="message" rows="5" required 
+                                  style="background:rgba(0,0,0,0.8); border: 1px solid var(--border-color); color: var(--text-primary);"></textarea>
+                        <div class="invalid-feedback" id="messageError"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="border-top: 2px solid var(--border-color);">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="sendEmail()">Send Message</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:rgba(0,0,0,0.95); border: 2px solid var(--border-color);">
+            <div class="modal-header" style="border-bottom: 2px solid var(--border-color);">
+                <h5 class="modal-title pixel-text text-success" id="successModalLabel">Message Sent!</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p class="text-secondary">Thank you for your message! I will get back to you soon.</p>
+            </div>
+            <div class="modal-footer" style="border-top: 2px solid var(--border-color);">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Copy email to clipboard
+function copyEmail() {
+    const email = 'davidgayer@gmail.com';
+    navigator.clipboard.writeText(email).then(function() {
+        // Show success feedback
+        const emailElement = document.querySelector('.clickable-email');
+        const originalText = emailElement.innerHTML;
+        emailElement.innerHTML = `
+            davidgayer@gmail.com
+            <small class="d-block text-success mt-1">Copied to clipboard!</small>
+        `;
+        setTimeout(() => {
+            emailElement.innerHTML = originalText;
+        }, 2000);
+    }).catch(function(err) {
+        console.error('Could not copy text: ', err);
+    });
+}
+
+// Open contact form modal
+function openContactForm() {
+    const modal = new bootstrap.Modal(document.getElementById('contactModal'));
+    modal.show();
+}
+
+// Validate email format
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
+
+// Send email function
+function sendEmail() {
+    const visitorEmail = document.getElementById('visitorEmail').value.trim();
+    const message = document.getElementById('message').value.trim();
+    
+    // Reset previous errors
+    document.getElementById('emailError').textContent = '';
+    document.getElementById('messageError').textContent = '';
+    document.getElementById('visitorEmail').classList.remove('is-invalid');
+    document.getElementById('message').classList.remove('is-invalid');
+    
+    let isValid = true;
+    
+    // Validate email
+    if (!visitorEmail) {
+        document.getElementById('emailError').textContent = 'Email is required';
+        document.getElementById('visitorEmail').classList.add('is-invalid');
+        isValid = false;
+    } else if (!validateEmail(visitorEmail)) {
+        document.getElementById('emailError').textContent = 'Please enter a valid email address';
+        document.getElementById('visitorEmail').classList.add('is-invalid');
+        isValid = false;
+    }
+    
+    // Validate message
+    if (!message) {
+        document.getElementById('messageError').textContent = 'Message is required';
+        document.getElementById('message').classList.add('is-invalid');
+        isValid = false;
+    } else if (message.length < 10) {
+        document.getElementById('messageError').textContent = 'Message must be at least 10 characters long';
+        document.getElementById('message').classList.add('is-invalid');
+        isValid = false;
+    }
+    
+    if (isValid) {
+        // Send email to backend
+        fetch('/send-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: visitorEmail,
+                message: message
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Close contact modal
+                const contactModal = bootstrap.Modal.getInstance(document.getElementById('contactModal'));
+                contactModal.hide();
+                
+                // Show success modal
+                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+                
+                // Reset form
+                document.getElementById('contactForm').reset();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to send message. Please try again.');
+        });
+    }
+}
+</script>
 
 <style>
 /* Contact page layout */
@@ -104,6 +262,52 @@
 .card {
     backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Modal styling */
+.modal {
+    z-index: 9999 !important;
+}
+
+.modal-content {
+    backdrop-filter: blur(10px);
+}
+
+.modal-header {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.modal-footer {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Form styling */
+.form-control:focus {
+    background: rgba(0, 0, 0, 0.9) !important;
+    border-color: var(--border-color) !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 140, 0, 0.25) !important;
+    color: var(--text-primary) !important;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+}
+
+/* Clickable email styling */
+.clickable-email:hover {
+    color: var(--text-secondary) !important;
+    text-decoration: underline;
+}
+
+/* Link styling */
+a.text-secondary:hover {
+    color: var(--text-secondary) !important;
+    text-decoration: underline;
 }
 </style>
 {% endblock %}

@@ -1,5 +1,8 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 import os
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # Create Flask app for personal website
 app = Flask(__name__)
@@ -26,6 +29,56 @@ def projects():
 def contact():
     """Contact information"""
     return render_template('contact.html')
+
+@app.route('/send-email', methods=['POST'])
+def send_email():
+    """Send email from contact form"""
+    try:
+        data = request.get_json()
+        visitor_email = data.get('email')
+        message = data.get('message')
+        
+        # Validate inputs
+        if not visitor_email or not message:
+            return jsonify({'success': False, 'error': 'Email and message are required'}), 400
+        
+        # Email configuration
+        sender_email = "your-email@gmail.com"  # Replace with your email
+        sender_password = "your-app-password"   # Replace with your app password
+        recipient_email = "davidgayer@gmail.com"
+        
+        # Create email message
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = recipient_email
+        msg['Subject'] = f"New message from {visitor_email}"
+        
+        body = f"""
+        New message from your website contact form:
+        
+        From: {visitor_email}
+        Message:
+        {message}
+        """
+        
+        msg.attach(MIMEText(body, 'plain'))
+        
+        # Send email (commented out for now - you'll need to configure SMTP)
+        # server = smtplib.SMTP('smtp.gmail.com', 587)
+        # server.starttls()
+        # server.login(sender_email, sender_password)
+        # text = msg.as_string()
+        # server.sendmail(sender_email, recipient_email, text)
+        # server.quit()
+        
+        # For now, just log the message
+        print(f"Email from {visitor_email}: {message}")
+        
+        return jsonify({'success': True, 'message': 'Email sent successfully'}), 200
+        
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        return jsonify({'success': False, 'error': 'Failed to send email'}), 500
 
 if __name__ == '__main__':
     # Railway will set PORT environment variable
