@@ -3,109 +3,57 @@
 {% block title %}Your Name - Developer{% endblock %}
 
 {% block content %}
-<!-- Rain Animation Canvas Background -->
-<canvas id="rain-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;"></canvas>
+<!-- Video Background -->
+<div class="video-background">
+    <video autoplay muted loop playsinline>
+        <source src="{{ url_for('static', filename='videos/background-video.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
 
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <div class="card mb-5" style="background:rgba(0,0,0,0.85);">
             <div class="card-body text-center p-5">
-                <h1 class="display-4 fw-bold mb-4 pixel-text">
+                <h1 class="display-4 fw-bold mb-4 pixel-text welcome-title">
                     Welcome
                 </h1>
                 <p class="lead mb-5 text-secondary">
-                    I'm a developer passionate about creating interactive web applications 
-                    and bringing people together through technology.
+                    Welcome to my personal website.
+I'm a hobby developer with a passion for constantly exploring new possibilities in software development, especially through the use of artificial intelligence. This site serves as a hub for my projects and a gateway to everything I'm currently working on.
                 </p>
-                <div class="row text-center g-4">
-                    <div class="col-md-4">
-                        <h5 class="fw-semibold">Web Development</h5>
-                        <p class="text-muted">Python, Flask, JavaScript</p>
-                    </div>
-                    <div class="col-md-4">
-                        <h5 class="fw-semibold">Problem Solving</h5>
-                        <p class="text-muted">Creative solutions</p>
-                    </div>
-                    <div class="col-md-4">
-                        <h5 class="fw-semibold">Interactive Apps</h5>
-                        <p class="text-muted">Engaging experiences</p>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-// --- Pixelated Rain Animation ---
-const canvas = document.getElementById('rain-bg');
-const ctx = canvas.getContext('2d');
-
-let raindrops = [];
-const raindropCount = 150;
-const pixelSize = 2; // Size of each pixel
-
-class Raindrop {
-    constructor() {
-        this.reset();
-    }
-    
-    reset() {
-        this.x = Math.floor(Math.random() * canvas.width / pixelSize) * pixelSize;
-        this.y = -pixelSize * 4;
-        this.speed = Math.floor(Math.random() * 3 + 2) * pixelSize;
-        this.length = Math.floor(Math.random() * 4 + 2) * pixelSize;
-        this.opacity = Math.random() * 0.7 + 0.3;
-    }
-    
-    update() {
-        this.y += this.speed;
-        if (this.y > canvas.height) {
-            this.reset();
-        }
-    }
-    
-    draw() {
-        ctx.fillStyle = `rgba(255, 140, 0, ${this.opacity})`;
-        
-        // Draw pixelated raindrop as rectangles
-        for (let i = 0; i < this.length / pixelSize; i++) {
-            ctx.fillRect(
-                this.x, 
-                this.y + (i * pixelSize), 
-                pixelSize, 
-                pixelSize
-            );
-        }
-    }
+<style>
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
 }
 
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+.video-background video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-
-// Initialize raindrops
-for (let i = 0; i < raindropCount; i++) {
-    raindrops.push(new Raindrop());
+/* Ensure content is readable over video */
+.card {
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-function animateRain() {
-    // Clear with fade effect
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    raindrops.forEach(drop => {
-        drop.update();
-        drop.draw();
-    });
-    
-    requestAnimationFrame(animateRain);
+/* Welcome title specific styling */
+.welcome-title {
+    color: #424241 !important;
 }
-
-animateRain();
-</script>
+</style>
 {% endblock %}
