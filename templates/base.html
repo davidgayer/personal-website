@@ -351,7 +351,7 @@
                     <div class="social-links">
                         <a href="https://github.com/davidgayer" title="GitHub">GitHub</a>
                         <a href="https://www.linkedin.com/in/david-gayer-68a3211a5/" title="LinkedIn">LinkedIn</a>
-                        <a href="mailto:davidgayer1@gmail.com" title="Email">Email</a>
+                        <a href="#" onclick="copyFooterEmail(event)" title="Email" style="cursor: pointer;">Email</a>
                     </div>
                 </div>
             </div>
@@ -378,6 +378,26 @@
                 link.classList.add('active');
             }
         });
+
+        // Copy footer email to clipboard
+        function copyFooterEmail(event) {
+            event.preventDefault(); // Prevent scrolling to top
+            const email = 'davidgayer@gmail.com';
+            navigator.clipboard.writeText(email).then(function() {
+                // Show success feedback
+                const emailLink = event.target;
+                const originalText = emailLink.textContent;
+                emailLink.textContent = 'Copied!';
+                emailLink.style.color = '#28a745';
+                
+                setTimeout(() => {
+                    emailLink.textContent = originalText;
+                    emailLink.style.color = '';
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
     </script>
 </body>
 </html>

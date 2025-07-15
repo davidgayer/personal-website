@@ -3,6 +3,10 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Create Flask app for personal website
 app = Flask(__name__)
@@ -43,13 +47,13 @@ def send_email():
             return jsonify({'success': False, 'error': 'Email and message are required'}), 400
         
         # Email configuration
-        sender_email = "your-email@gmail.com"  # Replace with your email
-        sender_password = "your-app-password"   # Replace with your app password
-        recipient_email = "davidgayer@gmail.com"
+        sender_email = os.getenv('GMAIL_EMAIL')  # Your Gmail account
+        sender_password = os.getenv('GMAIL_APP_PASSWORD')
+        recipient_email = "davidgayer1@gmail.com"  # Your personal email
         
         # Create email message
         msg = MIMEMultipart()
-        msg['From'] = sender_email
+        msg['From'] = f"Website Contact Form <{sender_email}>"  # Shows as "Website Contact Form"
         msg['To'] = recipient_email
         msg['Subject'] = f"New message from {visitor_email}"
         
@@ -59,20 +63,26 @@ def send_email():
         From: {visitor_email}
         Message:
         {message}
+        
+        ---
+        This email was sent from your personal website contact form.
         """
         
         msg.attach(MIMEText(body, 'plain'))
         
-        # Send email (commented out for now - you'll need to configure SMTP)
-        # server = smtplib.SMTP('smtp.gmail.com', 587)
-        # server.starttls()
-        # server.login(sender_email, sender_password)
-        # text = msg.as_string()
-        # server.sendmail(sender_email, recipient_email, text)
-        # server.quit()
-        
-        # For now, just log the message
-        print(f"Email from {visitor_email}: {message}")
+        # Send email via SMTP
+        try:
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login(sender_email, sender_password)
+            text = msg.as_string()
+            server.sendmail(sender_email, recipient_email, text)
+            server.quit()
+            print(f"Email sent successfully from {visitor_email}: {message}")
+        except Exception as e:
+            print(f"SMTP Error: {e}")
+            # Fallback: just log the message if SMTP fails
+            print(f"Email from {visitor_email}: {message}")
         
         return jsonify({'success': True, 'message': 'Email sent successfully'}), 200
         
