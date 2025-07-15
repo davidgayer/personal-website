@@ -2,6 +2,8 @@
 
 {% block title %}Your Name - Developer{% endblock %}
 
+{% block body_class %}homepage{% endblock %}
+
 {% block content %}
 <!-- Video Background -->
 <div class="video-background">
@@ -11,14 +13,14 @@
     </video>
 </div>
 
-<div class="row justify-content-center">
-    <div class="col-lg-8">
-        <div class="card mb-5" style="background:rgba(0,0,0,0.85);">
-            <div class="card-body text-center p-5">
+<div class="fullscreen-container">
+    <div class="content-wrapper">
+        <div class="card" style="background:rgba(0,0,0,0.85);">
+            <div class="card-body text-center">
                 <h1 class="display-4 fw-bold mb-4 pixel-text welcome-title">
                     Welcome
                 </h1>
-                <p class="lead mb-5 text-secondary">
+                <p class="lead text-secondary">
                     Welcome to my personal website.
 I'm a hobby developer with a passion for constantly exploring new possibilities in software development, especially through the use of artificial intelligence. This site serves as a hub for my projects and a gateway to everything I'm currently working on.
                 </p>
@@ -49,6 +51,25 @@ I'm a hobby developer with a passion for constantly exploring new possibilities 
 .card {
     backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Fullscreen layout */
+.fullscreen-container {
+    position: fixed;
+    top: 60px; /* Account for navbar height */
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 60px - 80px); /* Subtract navbar and footer height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.content-wrapper {
+    width: 100%;
+    max-width: 800px;
+    padding: 0 2rem;
 }
 
 /* Welcome title specific styling */

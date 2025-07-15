@@ -1,14 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %}Contact - Your Name{% endblock %}
+{% block title %}Contact - David Gayer{% endblock %}
+
+{% block body_class %}contact-page{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-8">
-        <div class="card hover-lift">
+<!-- Video Background -->
+<div class="video-background">
+    <video autoplay muted loop playsinline>
+        <source src="{{ url_for('static', filename='videos/background-video.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+<div class="contact-container">
+    <div class="contact-content">
+        <div class="card" style="background:rgba(0,0,0,0.85);">
             <div class="card-body p-5">
-                <h2 class="text-center mb-4 fw-bold">
-                    <i class="fas fa-envelope text-primary"></i> Get in Touch
+                <h2 class="text-center mb-4 fw-bold pixel-text">
+                    Get in Touch
                 </h2>
                 
                 <p class="text-center lead mb-5 text-secondary">
@@ -17,27 +27,23 @@
                 
                 <div class="row g-4 mb-5">
                     <div class="col-md-6 text-center">
-                        <i class="fas fa-envelope icon-large text-primary mb-3"></i>
                         <h5 class="fw-semibold">Email</h5>
-                        <p class="text-secondary">your.email@example.com</p>
+                        <p class="text-secondary">davidgayer@gmail.com</p>
                     </div>
                     
                     <div class="col-md-6 text-center">
-                        <i class="fab fa-github icon-large text-primary mb-3"></i>
                         <h5 class="fw-semibold">GitHub</h5>
-                        <p class="text-secondary">github.com/yourusername</p>
+                        <p class="text-secondary">github.com/davidgayer</p>
                     </div>
                 </div>
                 
                 <div class="row g-4 mb-5">
                     <div class="col-md-6 text-center">
-                        <i class="fab fa-linkedin icon-large text-primary mb-3"></i>
                         <h5 class="fw-semibold">LinkedIn</h5>
-                        <p class="text-secondary">linkedin.com/in/yourprofile</p>
+                        <p class="text-secondary">linkedin.com/in/david-gayer-68a3211a5</p>
                     </div>
                     
                     <div class="col-md-6 text-center">
-                        <i class="fas fa-code icon-large text-primary mb-3"></i>
                         <h5 class="fw-semibold">Portfolio</h5>
                         <p class="text-secondary">Check out my quiz app!</p>
                     </div>
@@ -45,14 +51,59 @@
                 
                 <div class="text-center mt-5">
                     <a href="https://quiz.yourdomain.com" class="btn btn-primary btn-lg me-3" target="_blank">
-                        <i class="fas fa-gamepad"></i> Try My Quiz App
+                        Try My Quiz App
                     </a>
-                    <a href="mailto:your.email@example.com" class="btn btn-outline-primary btn-lg">
-                        <i class="fas fa-paper-plane"></i> Send Email
+                    <a href="mailto:davidgayer@gmail.com" class="btn btn-outline-primary btn-lg">
+                        Send Email
                     </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+/* Contact page layout */
+.contact-container {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 60px - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.contact-content {
+    width: 100%;
+    max-width: 800px;
+    padding: 0 2rem;
+}
+
+/* Video background */
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.video-background video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Ensure content is readable over video */
+.card {
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+</style>
 {% endblock %}

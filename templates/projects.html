@@ -1,21 +1,31 @@
 {% extends "base.html" %}
 
-{% block title %}Projects - Your Name{% endblock %}
+{% block title %}Projects - David Gayer{% endblock %}
+
+{% block body_class %}projects-page{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-10">
-        <h2 class="text-center mb-5 fw-bold">
-            <i class="fas fa-folder-open text-primary"></i> My Projects
+<!-- Video Background -->
+<div class="video-background">
+    <video autoplay muted loop playsinline>
+        <source src="{{ url_for('static', filename='videos/background-video.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+<div class="projects-container">
+    <div class="projects-content">
+        <h2 class="text-center mb-5 fw-bold pixel-text">
+            My Projects
         </h2>
         
         <!-- Featured Project: Pub Quiz -->
-        <div class="card mb-5 hover-lift">
+        <div class="card mb-5" style="background:rgba(0,0,0,0.85);">
             <div class="card-body p-5">
                 <div class="row">
                     <div class="col-md-8">
-                        <h3 class="fw-bold mb-3">
-                            <i class="fas fa-trophy text-primary"></i> Interactive Pub Quiz
+                        <h3 class="fw-bold mb-3 pixel-text">
+                            Interactive Pub Quiz
                         </h3>
                         <p class="text-muted mb-4">Flask Web Application | 2025</p>
                         <p class="text-secondary mb-4">
@@ -42,13 +52,12 @@
                         </div>
                     </div>
                     <div class="col-md-4 text-center">
-                        <i class="fas fa-gamepad icon-large text-primary mb-4"></i>
                         <div class="d-grid gap-3">
                             <a href="https://quiz.yourdomain.com" class="btn btn-primary" target="_blank">
-                                <i class="fas fa-external-link-alt"></i> Live Demo
+                                Live Demo
                             </a>
                             <a href="#" class="btn btn-outline-primary">
-                                <i class="fab fa-github"></i> Source Code
+                                Source Code
                             </a>
                         </div>
                     </div>
@@ -57,10 +66,9 @@
         </div>
         
         <!-- Future Projects Placeholder -->
-        <div class="card hover-lift">
+        <div class="card" style="background:rgba(0,0,0,0.85);">
             <div class="card-body text-center p-5">
-                <i class="fas fa-plus-circle icon-large text-muted mb-4"></i>
-                <h5 class="fw-semibold mb-3">More Projects Coming Soon!</h5>
+                <h5 class="fw-semibold mb-3 pixel-text">More Projects Coming Soon!</h5>
                 <p class="text-secondary">
                     I'm constantly working on new ideas and applications. 
                     Check back regularly for updates.
@@ -69,4 +77,47 @@
         </div>
     </div>
 </div>
+
+<style>
+/* Projects page layout */
+.projects-container {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 60px - 80px);
+    overflow-y: auto;
+    z-index: 1;
+}
+
+.projects-content {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Video background */
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.video-background video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Ensure content is readable over video */
+.card {
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+</style>
 {% endblock %}
