@@ -5,9 +5,14 @@
 {% block body_class %}homepage{% endblock %}
 
 {% block content %}
+<!-- Background Image (shows while video loads) -->
+<div class="background-image">
+    <img src="{{ url_for('static', filename='images/background-poster.png') }}" alt="Background" />
+</div>
+
 <!-- Video Background -->
-<div class="video-background">
-    <video autoplay muted loop playsinline>
+<div class="video-background" id="videoBackground">
+    <video autoplay muted loop playsinline id="backgroundVideo">
         <source src="{{ url_for('static', filename='videos/background-video.mp4') }}" type="video/mp4">
         Your browser does not support the video tag.
     </video>
@@ -35,6 +40,29 @@ I'm a hobby developer with a passion for constantly exploring new possibilities 
 </div>
 
 <style>
+.background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+}
+
+.background-image.fade-out {
+    opacity: 0;
+}
+
+.background-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
 .video-background {
     position: fixed;
     top: 0;
@@ -43,6 +71,12 @@ I'm a hobby developer with a passion for constantly exploring new possibilities 
     height: 100vh;
     z-index: -1;
     overflow: hidden;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.video-background.video-ready {
+    opacity: 1;
 }
 
 .video-background video {
@@ -103,4 +137,46 @@ I'm a hobby developer with a passion for constantly exploring new possibilities 
     color: #424241 !important;
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const backgroundImage = document.querySelector('.background-image');
+    const videoBackground = document.getElementById('videoBackground');
+    const video = document.getElementById('backgroundVideo');
+    
+    // Function to transition from image to video
+    function transitionToVideo() {
+        backgroundImage.classList.add('fade-out');
+        videoBackground.classList.add('video-ready');
+        
+        // Remove the background image element after transition
+        setTimeout(() => {
+            backgroundImage.style.display = 'none';
+        }, 1000);
+    }
+    
+    // Check if video can play
+    if (video.readyState >= 2) { // HAVE_CURRENT_DATA
+        // Video is already loaded
+        transitionToVideo();
+    } else {
+        // Wait for video to be ready
+        video.addEventListener('canplay', function() {
+            transitionToVideo();
+        });
+        
+        // Fallback: if video fails to load, keep the image
+        video.addEventListener('error', function() {
+            console.log('Video failed to load, keeping background image');
+        });
+        
+        // Fallback: if video takes too long, transition anyway after 3 seconds
+        setTimeout(function() {
+            if (!videoBackground.classList.contains('video-ready')) {
+                transitionToVideo();
+            }
+        }, 3000);
+    }
+});
+</script>
 {% endblock %}
