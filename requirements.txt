@@ -3,8 +3,6 @@ Flask==3.0.0
 Werkzeug>=3.0.0
 python-dotenv==1.0.0
 
-# .env (create this file - don't commit to git)
-FLASK_SECRET_KEY=your-super-secret-key-here-change-this
 
 # Procfile (for Railway deployment)
 web: python app.py
