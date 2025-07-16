@@ -168,14 +168,99 @@
 }
 
 @media (max-width: 768px) {
+    .projects-container {
+        top: 70px;
+        height: calc(100vh - 70px - 60px);
+    }
+    
     .projects-grid {
         grid-template-columns: 1fr;
         max-width: 500px;
+        gap: 1rem;
+        padding: 1rem;
     }
     
     .project-card {
         height: auto;
-        min-height: 250px;
+        min-height: 220px;
+    }
+    
+    .project-card .card-body {
+        padding: 1rem;
+    }
+    
+    .project-card h5 {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .project-card .text-muted {
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .project-card .text-secondary {
+        font-size: 0.8rem;
+        line-height: 1.2;
+        margin-bottom: 0.75rem;
+    }
+    
+    .tech-tags {
+        margin-bottom: 0.75rem;
+    }
+    
+    .tech-tags .badge {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.5rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .project-links .btn {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+        margin-right: 0.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .projects-container {
+        top: 65px;
+        height: calc(100vh - 65px - 55px);
+    }
+    
+    .projects-grid {
+        padding: 0.75rem;
+        gap: 0.75rem;
+    }
+    
+    .project-card {
+        min-height: 200px;
+    }
+    
+    .project-card .card-body {
+        padding: 0.75rem;
+    }
+    
+    .project-card h5 {
+        font-size: 0.9rem;
+    }
+    
+    .project-card .text-muted {
+        font-size: 0.7rem;
+    }
+    
+    .project-card .text-secondary {
+        font-size: 0.75rem;
+    }
+    
+    .tech-tags .badge {
+        font-size: 0.6rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .project-links .btn {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.5rem;
     }
 }
 
@@ -228,6 +313,29 @@
 .video-attribution a:hover {
     opacity: 0.8;
     color: rgba(255, 140, 0, 0.6);
+}
+
+/* Mobile video attribution */
+@media (max-width: 768px) {
+    .video-attribution {
+        bottom: 5px;
+        right: 5px;
+    }
+    
+    .video-attribution a {
+        font-size: 0.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .video-attribution {
+        bottom: 3px;
+        right: 3px;
+    }
+    
+    .video-attribution a {
+        font-size: 0.5rem;
+    }
 }
 </style>
 

@@ -418,5 +418,116 @@ a.text-secondary:hover {
     opacity: 0.8;
     color: rgba(255, 140, 0, 0.6);
 }
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .contact-container {
+        top: 70px;
+        height: calc(100vh - 70px - 60px);
+        padding: 1rem;
+    }
+    
+    .contact-content {
+        padding: 0 1rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem !important;
+    }
+    
+    .h2-font-color {
+        font-size: 1.5rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    .h5-font-color {
+        font-size: 1rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .lead {
+        font-size: 1rem;
+        line-height: 1.4;
+        margin-bottom: 1.5rem !important;
+    }
+    
+    .row.g-4 {
+        margin-bottom: 1.5rem !important;
+    }
+    
+    .row.g-4 .col-md-6 {
+        margin-bottom: 1rem;
+    }
+    
+    .btn-lg {
+        font-size: 0.8rem;
+        padding: 0.6rem 1.2rem;
+    }
+    
+    /* Mobile video attribution */
+    .video-attribution {
+        bottom: 5px;
+        right: 5px;
+    }
+    
+    .video-attribution a {
+        font-size: 0.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-container {
+        top: 65px;
+        height: calc(100vh - 65px - 55px);
+        padding: 0.5rem;
+    }
+    
+    .contact-content {
+        padding: 0 0.5rem;
+    }
+    
+    .card-body {
+        padding: 1rem !important;
+    }
+    
+    .h2-font-color {
+        font-size: 1.3rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+    
+    .h5-font-color {
+        font-size: 0.9rem !important;
+        margin-bottom: 0.25rem !important;
+    }
+    
+    .lead {
+        font-size: 0.9rem;
+        line-height: 1.3;
+        margin-bottom: 1rem !important;
+    }
+    
+    .row.g-4 {
+        margin-bottom: 1rem !important;
+    }
+    
+    .row.g-4 .col-md-6 {
+        margin-bottom: 0.75rem;
+    }
+    
+    .btn-lg {
+        font-size: 0.7rem;
+        padding: 0.5rem 1rem;
+    }
+    
+    /* Extra small mobile video attribution */
+    .video-attribution {
+        bottom: 3px;
+        right: 3px;
+    }
+    
+    .video-attribution a {
+        font-size: 0.5rem;
+    }
+}
 </style>
 {% endblock %}

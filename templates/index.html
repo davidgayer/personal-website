@@ -136,6 +136,78 @@ I'm a hobby developer with a passion for constantly exploring new possibilities 
 .welcome-title {
     color: #424241 !important;
 }
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .fullscreen-container {
+        top: 70px; /* Slightly more space for mobile navbar */
+        height: calc(100vh - 70px - 60px); /* Adjusted for mobile footer */
+        padding: 1rem;
+    }
+    
+    .content-wrapper {
+        padding: 0 1rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .welcome-title {
+        font-size: 1.5rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    .lead {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+    
+    /* Mobile video attribution */
+    .video-attribution {
+        bottom: 5px;
+        right: 5px;
+    }
+    
+    .video-attribution a {
+        font-size: 0.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .fullscreen-container {
+        top: 65px;
+        height: calc(100vh - 65px - 55px);
+        padding: 0.5rem;
+    }
+    
+    .content-wrapper {
+        padding: 0 0.5rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .welcome-title {
+        font-size: 1.3rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+    
+    .lead {
+        font-size: 0.9rem;
+        line-height: 1.3;
+    }
+    
+    .video-attribution {
+        bottom: 3px;
+        right: 3px;
+    }
+    
+    .video-attribution a {
+        font-size: 0.5rem;
+    }
+}
 </style>
 
 <script>
