@@ -11,13 +11,18 @@
         <source src="{{ url_for('static', filename='videos/background-video.mp4') }}" type="video/mp4">
         Your browser does not support the video tag.
     </video>
+    <div class="video-attribution">
+        <a href="https://www.vecteezy.com/free-videos/pixel" target="_blank" rel="noopener">
+            Pixel Stock Videos by Vecteezy
+        </a>
+    </div>
 </div>
 
 <div class="contact-container">
     <div class="contact-content">
         <div class="card" style="background:rgba(0,0,0,0.85);">
             <div class="card-body p-5">
-                <h2 class="text-center mb-4 fw-bold pixel-text">
+                <h2 class="text-center mb-4 fw-bold pixel-text h2-font-color">
                     Get in Touch
                 </h2>
                 
@@ -27,7 +32,7 @@
                 
                 <div class="row g-4 mb-5">
                     <div class="col-md-6 text-center">
-                        <h5 class="fw-semibold">Email</h5>
+                        <h5 class="h5-font-color fw-semibold pixel-text">Email</h5>
                         <p class="text-secondary clickable-email" onclick="copyEmail()" style="cursor: pointer;">
                             davidgayer@gmail.com
                             <small class="d-block text-muted mt-1">Click to copy</small>
@@ -35,21 +40,21 @@
                     </div>
                     
                     <div class="col-md-6 text-center">
-                        <h5 class="fw-semibold">Location</h5>
+                        <h5 class="h5-font-color fw-semibold pixel-text">Location</h5>
                         <p class="text-secondary">Prague, Czech Republic</p>
                     </div>
                 </div>
                 
                 <div class="row g-4 mb-5">
                     <div class="col-md-6 text-center">
-                        <h5 class="fw-semibold">GitHub</h5>
+                        <h5 class="h5-font-color fw-semibold pixel-text">GitHub</h5>
                         <a href="https://github.com/davidgayer" target="_blank" class="text-secondary text-decoration-none">
                             github.com/davidgayer
                         </a>
                     </div>
                     
                     <div class="col-md-6 text-center">
-                        <h5 class="fw-semibold">LinkedIn</h5>
+                        <h5 class="h5-font-color fw-semibold pixel-text">LinkedIn</h5>
                         <a href="https://www.linkedin.com/in/david-gayer-68a3211a5/" target="_blank" class="text-secondary text-decoration-none">
                             linkedin.com/david-gayer
                         </a>
@@ -240,6 +245,14 @@ function sendEmail() {
     padding: 0 2rem;
 }
 
+.h2-font-color {
+    color: rgb(66, 65, 65);
+}
+
+.h5-font-color {
+    color: rgb(65, 65, 65);
+}
+
 /* Video background */
 .video-background {
     position: fixed;
@@ -308,6 +321,27 @@ function sendEmail() {
 a.text-secondary:hover {
     color: var(--text-secondary) !important;
     text-decoration: underline;
+}
+
+/* Video attribution - very subtle */
+.video-attribution {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 1;
+}
+
+.video-attribution a {
+    color: rgba(255, 140, 0, 0.3);
+    font-size: 0.7rem;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+    opacity: 0.5;
+}
+
+.video-attribution a:hover {
+    opacity: 0.8;
+    color: rgba(255, 140, 0, 0.6);
 }
 </style>
 {% endblock %}

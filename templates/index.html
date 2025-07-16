@@ -11,6 +11,11 @@
         <source src="{{ url_for('static', filename='videos/background-video.mp4') }}" type="video/mp4">
         Your browser does not support the video tag.
     </video>
+    <div class="video-attribution">
+        <a href="https://www.vecteezy.com/free-videos/pixel" target="_blank" rel="noopener">
+            Pixel Stock Videos by Vecteezy
+        </a>
+    </div>
 </div>
 
 <div class="fullscreen-container">
@@ -51,6 +56,27 @@ I'm a hobby developer with a passion for constantly exploring new possibilities 
 .card {
     backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Video attribution - very subtle */
+.video-attribution {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 1;
+}
+
+.video-attribution a {
+    color: rgba(255, 140, 0, 0.3);
+    font-size: 0.7rem;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+    opacity: 0.5;
+}
+
+.video-attribution a:hover {
+    opacity: 0.8;
+    color: rgba(255, 140, 0, 0.6);
 }
 
 /* Fullscreen layout */
