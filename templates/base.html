@@ -433,9 +433,93 @@
         .pixel-text {
             text-shadow: 2px 2px 0px rgba(255, 140, 0, 0.695);
         }
+
+        /* Global video background styles */
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            overflow: hidden;
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .background-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            will-change: opacity;
+        }
+
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* Video attribution - very subtle */
+        .video-attribution {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            z-index: 1;
+        }
+
+        .video-attribution a {
+            color: rgba(255, 140, 0, 0.3);
+            font-size: 0.7rem;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+            opacity: 0.5;
+        }
+
+        .video-attribution a:hover {
+            opacity: 0.8;
+            color: rgba(255, 140, 0, 0.6);
+        }
     </style>
 </head>
 <body class="{% block body_class %}{% endblock %}">
+    <!-- Global Video Background (shared across all pages) -->
+    <!-- Background image shows while video loads -->
+    <div class="background-image" id="globalBackgroundImage">
+        <img src="{{ url_for('static', filename='images/background-poster.png') }}" alt="Background" loading="eager" />
+    </div>
+
+    <div class="video-background" id="globalVideoBackground">
+        <video autoplay muted loop playsinline id="backgroundVideo" 
+               preload="none" 
+               poster="{{ url_for('static', filename='images/background-poster.png') }}"
+               width="1920" 
+               height="1080"
+               style="transform: translateZ(0); will-change: transform;">
+            <source src="{{ url_for('static', filename='videos/background-video.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-attribution">
+            <a href="https://www.vecteezy.com/free-videos/pixel" target="_blank" rel="noopener">
+                Pixel Stock Videos by Vecteezy
+            </a>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
@@ -492,37 +576,351 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Add fade-in animation to elements
-        document.addEventListener('DOMContentLoaded', function() {
-            const elements = document.querySelectorAll('.card, .btn');
-            elements.forEach((el, index) => {
-                el.style.animationDelay = `${index * 0.1}s`;
-                el.classList.add('fade-in');
+        // Global memory management
+        class MemoryManager {
+            constructor() {
+                this.pageListeners = [];
+                this.timeouts = [];
+                this.videoManager = null;
+            }
+            
+            addListener(element, event, handler, options = {}) {
+                element.addEventListener(event, handler, options);
+                this.pageListeners.push({element, event, handler, options});
+            }
+            
+            addTimeout(callback, delay) {
+                const timeoutId = setTimeout(callback, delay);
+                this.timeouts.push(timeoutId);
+                return timeoutId;
+            }
+            
+            cleanup() {
+                // Remove all event listeners
+                this.pageListeners.forEach(({element, event, handler, options}) => {
+                    try {
+                        element.removeEventListener(event, handler, options);
+                    } catch (e) {
+                        console.warn('Failed to remove listener:', e);
+                    }
+                });
+                this.pageListeners.length = 0;
+                
+                // Clear all timeouts
+                this.timeouts.forEach(timeoutId => {
+                    clearTimeout(timeoutId);
+                });
+                this.timeouts.length = 0;
+                
+                // Cleanup video
+                if (this.videoManager) {
+                    this.videoManager.cleanup();
+                }
+            }
+        }
+        
+        // Global video manager
+        class VideoManager {
+            constructor() {
+                this.video = null;
+                this.backgroundImage = null;
+                this.videoBackground = null;
+                this.initialized = false;
+                this.isTransitioned = false;
+                
+                // Store handler references for cleanup
+                this.handleCanPlay = null;
+                this.handleError = null;
+            }
+            
+            init() {
+                if (this.initialized) return;
+                
+                this.backgroundImage = document.querySelector('#globalBackgroundImage');
+                this.videoBackground = document.querySelector('#globalVideoBackground');
+                this.video = document.querySelector('#backgroundVideo');
+                
+                if (!this.video) {
+                    console.warn('Global video element not found');
+                    return;
+                }
+                
+                // Aggressive video memory optimization
+                this.video.preload = 'none'; // Don't preload anything
+                this.video.muted = true;
+                this.video.loop = true;
+                this.video.playsInline = true;
+                this.video.controls = false;
+                
+                // Reduce video quality for memory optimization
+                this.video.style.transform = 'translateZ(0)'; // Hardware acceleration
+                this.video.style.backfaceVisibility = 'hidden';
+                
+                this.setupVideoHandlers();
+                
+                // Only load video after user interaction or significant delay
+                this.loadVideoDelayed();
+                
+                this.initialized = true;
+                console.log('VideoManager initialized with aggressive memory optimization');
+            }
+            
+            setupVideoHandlers() {
+                if (!this.video) return;
+                
+                // Store handler references for proper cleanup
+                this.handleCanPlay = () => {
+                    if (!this.isTransitioned) {
+                        this.transitionToVideo();
+                    }
+                };
+                
+                this.handleError = () => {
+                    console.log('Video failed to load, keeping background image');
+                };
+                
+                // Use memory manager for cleanup
+                window.memoryManager.addListener(this.video, 'canplay', this.handleCanPlay, {once: true});
+                window.memoryManager.addListener(this.video, 'error', this.handleError, {once: true});
+                
+                // Check if video is already ready
+                if (this.video.readyState >= 2) {
+                    this.handleCanPlay();
+                } else {
+                    // Fallback timeout
+                    window.memoryManager.addTimeout(() => {
+                        if (!this.isTransitioned) {
+                            this.transitionToVideo();
+                        }
+                    }, 3000);
+                }
+            }
+            
+            loadVideoDelayed() {
+                // Load video only after user interaction or long delay
+                let videoLoaded = false;
+                
+                const loadVideo = () => {
+                    if (videoLoaded || !this.video) return;
+                    videoLoaded = true;
+                    
+                    console.log('Loading video after interaction/delay...');
+                    this.video.preload = 'metadata';
+                    this.video.load();
+                };
+                
+                // Load on any user interaction
+                const interactions = ['click', 'scroll', 'keydown', 'touchstart'];
+                interactions.forEach(event => {
+                    window.memoryManager.addListener(document, event, loadVideo, {once: true});
+                });
+                
+                // Fallback: load after 5 seconds if no interaction
+                window.memoryManager.addTimeout(loadVideo, 5000);
+            }
+            
+            transitionToVideo() {
+                if (this.isTransitioned) return;
+                
+                // Fade out background image, fade in video
+                if (this.backgroundImage) {
+                    this.backgroundImage.style.opacity = '0';
+                    window.memoryManager.addTimeout(() => {
+                        if (this.backgroundImage) {
+                            this.backgroundImage.style.display = 'none';
+                        }
+                    }, 1000);
+                }
+                
+                if (this.videoBackground) {
+                    this.videoBackground.style.opacity = '1';
+                }
+                
+                this.isTransitioned = true;
+                console.log('Video transition completed - background image hidden');
+            }
+            
+            cleanup() {
+                // Pause and clear video completely
+                if (this.video) {
+                    this.video.pause();
+                    this.video.currentTime = 0;
+                    this.video.muted = true;
+                    
+                    // Force video memory cleanup
+                    this.video.src = '';
+                    this.video.srcObject = null;
+                    this.video.load();
+                    
+                    // Remove all event listeners from video
+                    if (this.handleCanPlay) {
+                        this.video.removeEventListener('canplay', this.handleCanPlay);
+                    }
+                    if (this.handleError) {
+                        this.video.removeEventListener('error', this.handleError);
+                    }
+                }
+                
+                this.isTransitioned = false;
+                
+                // Reset background image visibility
+                if (this.backgroundImage) {
+                    this.backgroundImage.style.opacity = '1';
+                    this.backgroundImage.style.display = 'block';
+                }
+                
+                // Reset video background opacity
+                if (this.videoBackground) {
+                    this.videoBackground.style.opacity = '0';
+                }
+                
+                console.log('VideoManager cleaned up - background image restored');
+            }
+        }
+        
+        // Initialize global memory manager
+        window.memoryManager = new MemoryManager();
+        
+        // Force cleanup function for debugging
+        window.forceCleanup = function() {
+            console.log('Force cleanup triggered');
+            window.memoryManager.cleanup();
+            
+            // Force garbage collection if available
+            if (window.gc) {
+                window.gc();
+                console.log('Garbage collection forced');
+            }
+            
+            // Clear any remaining intervals/timeouts
+            for (let i = 1; i < 99999; i++) {
+                clearTimeout(i);
+                clearInterval(i);
+            }
+            
+            console.log('Force cleanup completed');
+        };
+        
+        // Test function - disable video entirely
+        window.disableVideo = function() {
+            console.log('DISABLING VIDEO FOR MEMORY TEST');
+            
+            const video = document.querySelector('#backgroundVideo');
+            if (video) {
+                video.pause();
+                video.src = '';
+                video.srcObject = null;
+                video.load();
+                video.style.display = 'none';
+            }
+            
+            // Hide video background entirely
+            const videoBackground = document.querySelector('#globalVideoBackground');
+            if (videoBackground) {
+                videoBackground.style.display = 'none';
+            }
+            
+            console.log('Video disabled - check memory usage now');
+        };
+        
+        // Nuclear option - clear everything
+        window.nuclearCleanup = function() {
+            console.log('NUCLEAR CLEANUP TRIGGERED');
+            
+            // Remove all video elements
+            document.querySelectorAll('video').forEach(video => {
+                video.pause();
+                video.src = '';
+                video.srcObject = null;
+                video.load();
+                video.remove();
+            });
+            
+            // Remove background images but keep smaller images
+            document.querySelectorAll('img').forEach(img => {
+                // Only remove large images (background images)
+                if (img.src.includes('background-poster') || img.naturalWidth > 1000) {
+                    img.remove();
+                }
+            });
+            
+            // Clear all event listeners
+            window.memoryManager.cleanup();
+            
+            // Force garbage collection
+            if (window.gc) {
+                window.gc();
+            }
+            
+            console.log('NUCLEAR CLEANUP COMPLETED - Page should reload');
+            window.location.reload();
+        };
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            window.memoryManager.cleanup();
+        });
+        
+        // Handle Back/Forward Cache (bfcache) - critical for memory management
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                // Page was restored from bfcache
+                console.log('Page restored from bfcache');
+                window.memoryManager.videoManager.init();
+            }
+        });
+        
+        window.addEventListener('pagehide', (event) => {
+            // Page is going into bfcache or being unloaded
+            console.log('Page going into bfcache or unloading');
+            window.memoryManager.cleanup();
+            
+            // Force video cleanup to prevent bfcache memory leaks
+            const videos = document.querySelectorAll('video');
+            videos.forEach(video => {
+                video.pause();
+                video.removeAttribute('src');
+                video.load();
             });
         });
-
-        // Active navigation highlighting
-        const navLinks = document.querySelectorAll('.nav-link');
-        const currentPath = window.location.pathname;
         
-        navLinks.forEach(link => {
-            if (link.getAttribute('href') === currentPath) {
-                link.classList.add('active');
-            }
+        // Enhanced DOMContentLoaded with memory management
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize video manager
+            window.memoryManager.videoManager = new VideoManager();
+            window.memoryManager.videoManager.init();
+            
+            // Add fade-in animation to elements (with cleanup)
+            const elements = document.querySelectorAll('.card, .btn');
+            elements.forEach((el, index) => {
+                if (el) {
+                    el.style.animationDelay = `${index * 0.1}s`;
+                    el.classList.add('fade-in');
+                }
+            });
+            
+            // Active navigation highlighting
+            const navLinks = document.querySelectorAll('.nav-link');
+            const currentPath = window.location.pathname;
+            
+            navLinks.forEach(link => {
+                if (link && link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
         });
 
         // Copy footer email to clipboard
         function copyFooterEmail(event) {
-            event.preventDefault(); // Prevent scrolling to top
+            event.preventDefault();
             const email = 'davidgayer@gmail.com';
             navigator.clipboard.writeText(email).then(function() {
-                // Show success feedback
                 const emailLink = event.target;
                 const originalText = emailLink.textContent;
                 emailLink.textContent = 'Copied!';
                 emailLink.style.color = '#28a745';
                 
-                setTimeout(() => {
+                window.memoryManager.addTimeout(() => {
                     emailLink.textContent = originalText;
                     emailLink.style.color = '';
                 }, 2000);

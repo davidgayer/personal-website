@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Test - Minimal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #000;
+            color: #fff;
+            padding: 2rem;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Memory Test - Minimal Page</h1>
+            <p>This page has minimal CSS, no external libraries, no video, no images.</p>
+            <p>Check memory usage in Chrome Task Manager (Shift+Esc)</p>
+            <p>Expected memory: 20-50MB</p>
+        </div>
+        
+        <div class="card">
+            <h2>Navigation Test</h2>
+            <a href="{{ url_for('home') }}" style="color: #fff;">← Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        console.log('Minimal test page loaded');
+        console.log('Check memory usage now - should be very low (20-50MB)');
+        
+        // Add minimal memory tracking
+        if (performance.memory) {
+            console.log('Memory usage:', {
+                used: Math.round(performance.memory.usedJSHeapSize / 1024 / 1024) + 'MB',
+                total: Math.round(performance.memory.totalJSHeapSize / 1024 / 1024) + 'MB',
+                limit: Math.round(performance.memory.jsHeapSizeLimit / 1024 / 1024) + 'MB'
+            });
+        }
+    </script>
+</body>
+</html>

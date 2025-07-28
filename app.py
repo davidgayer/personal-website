@@ -34,6 +34,11 @@ def contact():
     """Contact information"""
     return render_template('contact.html')
 
+@app.route('/test-minimal')
+def test_minimal():
+    """Minimal memory test page"""
+    return render_template('test_minimal.html')
+
 @app.route('/send-email', methods=['POST'])
 def send_email():
     """Send email from contact form"""

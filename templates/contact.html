@@ -5,24 +5,6 @@
 {% block body_class %}contact-page{% endblock %}
 
 {% block content %}
-<!-- Background Image (shows while video loads) -->
-<div class="background-image">
-    <img src="{{ url_for('static', filename='images/background-poster.png') }}" alt="Background" />
-</div>
-
-<!-- Video Background -->
-<div class="video-background" id="videoBackground">
-    <video autoplay muted loop playsinline id="backgroundVideo">
-        <source src="{{ url_for('static', filename='videos/background-video.mp4') }}" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-    <div class="video-attribution">
-        <a href="https://www.vecteezy.com/free-videos/pixel" target="_blank" rel="noopener">
-            Pixel Stock Videos by Vecteezy
-        </a>
-    </div>
-</div>
-
 <div class="contact-container">
     <div class="contact-content">
         <div class="card" style="background:rgba(0,0,0,0.85);">
@@ -39,7 +21,7 @@
                     <div class="col-md-6 text-center">
                         <h5 class="h5-font-color fw-semibold pixel-text">Email</h5>
                         <p class="text-secondary clickable-email" onclick="copyEmail()" style="cursor: pointer;">
-                            davidgayer@gmail.com
+                            davidgayer1@gmail.com
                             <small class="d-block text-muted mt-1">Click to copy</small>
                         </p>
                     </div>
@@ -127,7 +109,7 @@
 </div>
 
 <script>
-// Copy email to clipboard
+// Copy email to clipboard - using memory manager
 function copyEmail() {
     const email = 'davidgayer@gmail.com';
     navigator.clipboard.writeText(email).then(function() {
@@ -138,7 +120,7 @@ function copyEmail() {
             davidgayer@gmail.com
             <small class="d-block text-success mt-1">Copied to clipboard!</small>
         `;
-        setTimeout(() => {
+        window.memoryManager.addTimeout(() => {
             emailElement.innerHTML = originalText;
         }, 2000);
     }).catch(function(err) {
@@ -229,73 +211,11 @@ function sendEmail() {
     }
 }
 
-// Background image to video transition
-document.addEventListener('DOMContentLoaded', function() {
-    const backgroundImage = document.querySelector('.background-image');
-    const videoBackground = document.getElementById('videoBackground');
-    const video = document.getElementById('backgroundVideo');
-    
-    // Function to transition from image to video
-    function transitionToVideo() {
-        backgroundImage.classList.add('fade-out');
-        videoBackground.classList.add('video-ready');
-        
-        // Remove the background image element after transition
-        setTimeout(() => {
-            backgroundImage.style.display = 'none';
-        }, 1000);
-    }
-    
-    // Check if video can play
-    if (video.readyState >= 2) { // HAVE_CURRENT_DATA
-        // Video is already loaded
-        transitionToVideo();
-    } else {
-        // Wait for video to be ready
-        video.addEventListener('canplay', function() {
-            transitionToVideo();
-        });
-        
-        // Fallback: if video fails to load, keep the image
-        video.addEventListener('error', function() {
-            console.log('Video failed to load, keeping background image');
-        });
-        
-        // Fallback: if video takes too long, transition anyway after 3 seconds
-        setTimeout(function() {
-            if (!videoBackground.classList.contains('video-ready')) {
-                transitionToVideo();
-            }
-        }, 3000);
-    }
-});
+// Video management is now handled by the centralized VideoManager in base.html
 </script>
 
 <style>
 /* Contact page layout */
-.background-image {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -2;
-    overflow: hidden;
-    opacity: 1;
-    transition: opacity 1s ease-in-out;
-}
-
-.background-image.fade-out {
-    opacity: 0;
-}
-
-.background-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-}
-
 .contact-container {
     position: fixed;
     top: 60px;
@@ -322,43 +242,13 @@ document.addEventListener('DOMContentLoaded', function() {
     color: rgb(66, 65, 65);
 }
 
-/* Video background */
-.video-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
-    overflow: hidden;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-}
-
-.video-background.video-ready {
-    opacity: 1;
-}
-
-.video-background video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-}
-
-/* Ensure content is readable over video */
-.card {
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
 /* Modal styling */
 .modal {
     z-index: 9999 !important;
 }
 
 .modal-content {
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.95) !important;
 }
 
 .modal-header {
@@ -396,27 +286,6 @@ document.addEventListener('DOMContentLoaded', function() {
 a.text-secondary:hover {
     color: var(--text-secondary) !important;
     text-decoration: underline;
-}
-
-/* Video attribution - very subtle */
-.video-attribution {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    z-index: 1;
-}
-
-.video-attribution a {
-    color: rgba(255, 140, 0, 0.3);
-    font-size: 0.7rem;
-    text-decoration: none;
-    transition: opacity 0.3s ease;
-    opacity: 0.5;
-}
-
-.video-attribution a:hover {
-    opacity: 0.8;
-    color: rgba(255, 140, 0, 0.6);
 }
 
 /* Mobile optimizations */
@@ -463,16 +332,6 @@ a.text-secondary:hover {
         font-size: 0.8rem;
         padding: 0.6rem 1.2rem;
     }
-    
-    /* Mobile video attribution */
-    .video-attribution {
-        bottom: 5px;
-        right: 5px;
-    }
-    
-    .video-attribution a {
-        font-size: 0.6rem;
-    }
 }
 
 @media (max-width: 480px) {
@@ -517,16 +376,6 @@ a.text-secondary:hover {
     .btn-lg {
         font-size: 0.7rem;
         padding: 0.5rem 1rem;
-    }
-    
-    /* Extra small mobile video attribution */
-    .video-attribution {
-        bottom: 3px;
-        right: 3px;
-    }
-    
-    .video-attribution a {
-        font-size: 0.5rem;
     }
 }
 </style>
